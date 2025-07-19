@@ -1,5 +1,6 @@
 package com.swisscom.api.controller;
 
+import com.swisscom.api.model.ServiceSummaryDTO;
 import com.swisscom.api.model.SwisscomService;
 import com.swisscom.api.service.SwisscomApiServiceManager;
 import jakarta.validation.Valid;
@@ -36,7 +37,11 @@ public class ServiceManagerApiController {
         return ResponseEntity.ok(services);
     }
 
-
+    @GetMapping("/summary")
+    public ResponseEntity<List<ServiceSummaryDTO>> getAllServicesSummary(){
+        List<ServiceSummaryDTO> services = swisscomApiServiceManager.getAllServicesSummaryFromCache();
+        return ResponseEntity.ok(services);
+    }
     @PutMapping
     public ResponseEntity<SwisscomService> updateService(@Valid @RequestBody SwisscomService swisscomService){
         if (this.swisscomApiServiceManager.get(swisscomService.getId()).isEmpty()) {

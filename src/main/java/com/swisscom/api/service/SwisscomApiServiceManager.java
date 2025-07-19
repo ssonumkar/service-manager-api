@@ -1,6 +1,7 @@
 package com.swisscom.api.service;
 
 import com.swisscom.api.dao.SwisscomServiceRepository;
+import com.swisscom.api.model.ServiceSummaryDTO;
 import com.swisscom.api.model.SwisscomService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -52,5 +53,11 @@ public class SwisscomApiServiceManager {
         } else {
             return cache.getAll();
         }
+    }
+
+    public List<ServiceSummaryDTO> getAllServicesSummaryFromCache() {
+        return cache.getAll().stream()
+                .map(service -> new ServiceSummaryDTO(service.getId(), service.getResources().size()))
+                .toList();
     }
 }
