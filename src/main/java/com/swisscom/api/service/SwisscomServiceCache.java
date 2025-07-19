@@ -3,6 +3,8 @@ package com.swisscom.api.service;
 import com.swisscom.api.model.SwisscomService;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Optional;
@@ -34,5 +36,13 @@ public class SwisscomServiceCache {
 
     public boolean contains(String id) {
         return cache.containsKey(id);
+    }
+
+    public boolean isEmpty() {
+        return cache.isEmpty();
+    }
+
+    public List<SwisscomService> getAll() {
+        return new ArrayList<>(cache.values());
     }
 }

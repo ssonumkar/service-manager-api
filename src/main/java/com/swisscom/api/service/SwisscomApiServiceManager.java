@@ -5,6 +5,8 @@ import com.swisscom.api.model.SwisscomService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +44,13 @@ public class SwisscomApiServiceManager {
 
     public void clearCache(){
         this.cache.clear();
+    }
+
+    public List<SwisscomService> getAllServices() {
+        if (cache.isEmpty()) {
+            return repository.findAll();
+        } else {
+            return cache.getAll();
+        }
     }
 }

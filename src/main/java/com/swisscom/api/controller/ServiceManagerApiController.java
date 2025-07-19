@@ -8,7 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-
+import java.util.List;
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/service")
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class ServiceManagerApiController {
     @PostMapping
     public ResponseEntity save(@Valid @RequestBody SwisscomService swisscomService){
         SwisscomService createdService = swisscomApiServiceManager.save(swisscomService);
-        URI location = URI.create("/api/services/" + createdService.getId());
+        URI location = URI.create("/api/service/" + createdService.getId());
         return ResponseEntity.created(location).body(createdService);
     }
 
@@ -29,6 +30,12 @@ public class ServiceManagerApiController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @GetMapping
+    public ResponseEntity<List<SwisscomService>> getAllServices(){
+        List<SwisscomService> services = swisscomApiServiceManager.getAllServices();
+        return ResponseEntity.ok(services);
+    }
+
 
     @PutMapping
     public ResponseEntity<SwisscomService> updateService(@Valid @RequestBody SwisscomService swisscomService){
