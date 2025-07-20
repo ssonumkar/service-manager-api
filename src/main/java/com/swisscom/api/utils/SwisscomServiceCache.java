@@ -1,4 +1,4 @@
-package com.swisscom.api.service;
+package com.swisscom.api.utils;
 
 import com.swisscom.api.model.SwisscomService;
 import org.springframework.stereotype.Component;
@@ -10,19 +10,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Optional;
 
 @Component
-public class SwisscomServiceCache {
+public class SwisscomServiceCache<T> {
 
-    private final Map<String, SwisscomService> cache = new ConcurrentHashMap<>();
+    private final Map<String, T> cache = new ConcurrentHashMap<>();
 
-    public void putIfAbsent(String id, SwisscomService SwisscomService) {
-        cache.putIfAbsent(id, SwisscomService);
+    public void putIfAbsent(String id, T t) {
+        cache.putIfAbsent(id, t);
     }
 
-    public void put(String id, SwisscomService SwisscomService) {
-        cache.put(id, SwisscomService);
+    public void put(String id, T t) {
+        cache.put(id, t);
     }
 
-    public Optional<SwisscomService> get(String id) {
+    public Optional<T> get(String id) {
         return Optional.ofNullable(cache.get(id));
     }
 
@@ -42,7 +42,7 @@ public class SwisscomServiceCache {
         return cache.isEmpty();
     }
 
-    public List<SwisscomService> getAll() {
+    public List<T> getAll() {
         return new ArrayList<>(cache.values());
     }
 }
