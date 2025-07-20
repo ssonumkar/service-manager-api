@@ -1,6 +1,8 @@
 package com.swisscom.api.dao;
 
 import com.swisscom.api.model.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -13,5 +15,6 @@ public interface ResourceRepository extends MongoRepository<Resource, String> {
 
     // Additional methods can be added as required for the application logic
     List<Resource> findByServiceId(String serviceId);
-
+    Page<Resource> findByServiceId(String serviceId, Pageable pageable);
+    Page<Resource> findAll(Pageable pageable);
 }
