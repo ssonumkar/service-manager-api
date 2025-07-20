@@ -17,7 +17,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OwnerService implements IOwnerService{
+public class OwnerService implements IOwnerService {
     private final OwnerRepository repository;
     private final ResourceService resourceService;
     private final SwisscomServiceService swisscomService;
@@ -58,9 +58,11 @@ public class OwnerService implements IOwnerService{
         log.info("Saving multiple owners");
         repository.saveAll(ownersToSave);
     }
+
     private void validateServiceAndResource(Owner owner) {
         validationService.validateServiceAndResource(owner.getServiceId(), owner.getResourceId());
     }
+
     @Override
     @Cacheable(value = "owners", key = "#id", sync = true)
     public Optional<Owner> getById(String id) {

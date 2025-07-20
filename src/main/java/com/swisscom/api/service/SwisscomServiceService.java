@@ -46,6 +46,7 @@ public class SwisscomServiceService implements ISwisscomServiceService {
         }
         return false;
     }
+
     @Override
     public Page<SwisscomService> getAllPaginated(Pageable pageable) {
         log.info("Fetching paginated services");

@@ -1,10 +1,12 @@
 package com.swisscom.api.controller;
 
-import com.swisscom.api.model.*;
-import com.swisscom.api.service.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.swisscom.api.model.Owner;
+import com.swisscom.api.model.RegisterFullServiceRequest;
+import com.swisscom.api.model.Resource;
+import com.swisscom.api.model.SwisscomService;
+import com.swisscom.api.service.IOwnerService;
+import com.swisscom.api.service.IResourceService;
+import com.swisscom.api.service.ISwisscomServiceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,10 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/service")
-@Tag(name = "Service Management", description = "Operations related to Swisscom services")
 @AllArgsConstructor
 public class SwisscomServiceController {
 
@@ -34,12 +34,14 @@ public class SwisscomServiceController {
         return ResponseEntity.created(URI.create("/api/v1/service/" + s.getId()))
                 .body(service.save(s));
     }
+
     @GetMapping("/paginated")
     public ResponseEntity<Page<SwisscomService>> getAllPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(service.getAllPaginated(PageRequest.of(page, size)));
     }
+
     @GetMapping
     public ResponseEntity<List<SwisscomService>> getAll() {
         return ResponseEntity.ok(service.getAll());
@@ -55,6 +57,7 @@ public class SwisscomServiceController {
     public ResponseEntity<Void> delete(@PathVariable String id) {
         return service.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
+
     @PostMapping("/registerFull")
     public ResponseEntity<String> registerFullService(@RequestBody RegisterFullServiceRequest dto) {
         log.info("Registering full service structure: {}", dto.getServiceId());

@@ -2,8 +2,6 @@ package com.swisscom.api.utils;
 
 import com.swisscom.api.dao.ResourceRepository;
 import com.swisscom.api.dao.SwisscomServiceRepository;
-import com.swisscom.api.service.ResourceService;
-import com.swisscom.api.service.SwisscomServiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
