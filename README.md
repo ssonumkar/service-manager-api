@@ -73,15 +73,8 @@ git clone <repository-url>
 ```bash 
 cd service-manager-api
 ```
-3. Build the project using Maven:
+3. Give Permission and run script to run application:
 ```bash
-mvn clean install
-```
-4. Run the application:
-```bash
-mvn spring-boot:run
-```
-5. Access the API at `http://localhost:8080/api/v1/`
-6. Use a tool like Postman or cURL to test the API endpoints.
-7. Ensure MongoDB is running locally or configure the application to connect to a remote MongoDB instance.
-8. Configure the application properties in `src/main/resources/` as needed based on the environment.
+chmod +x run-app.sh
+./run-app.sh
+````
