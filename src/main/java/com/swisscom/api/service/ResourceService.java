@@ -20,7 +20,7 @@ public class ResourceService implements IResourceService {
     private final ResourceRepository repository;
     private final SwisscomServiceService swisscomService;
 
-    @Cacheable(value = "resourcesByService", key = "#serviceId", sync = true)
+    @Cacheable(value = "resources", key = "#serviceId", sync = true)
     public List<Resource> getByServiceId(String serviceId) {
         log.info("Fetching resources by serviceId: {}", serviceId);
         return repository.findByServiceId(serviceId);

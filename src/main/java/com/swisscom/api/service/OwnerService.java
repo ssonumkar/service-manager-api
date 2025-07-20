@@ -30,7 +30,7 @@ public class OwnerService implements IOwnerService {
     }
 
     @Override
-    @Cacheable(value = "ownersByResource", key = "#resourceId", sync = true)
+    @Cacheable(value = "owners", key = "#resourceId", sync = true)
     public Page<Owner> getByResourceIdPaginated(String resourceId, Pageable pageable) {
         log.info("Fetching paginated owners by resourceId: {}", resourceId);
         return repository.findByResourceId(resourceId, pageable);

@@ -47,6 +47,7 @@ public class SwisscomServiceService implements ISwisscomServiceService {
         return false;
     }
 
+    @Cacheable(value = "services", key = "#pageable.pageNumber + '-' + #pageable.pageSize", sync = true)
     @Override
     public Page<SwisscomService> getAllPaginated(Pageable pageable) {
         log.info("Fetching paginated services");
