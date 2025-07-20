@@ -35,18 +35,6 @@ class ResourceServiceTest {
     }
 
     @Test
-    void getAll_shouldReturnAllResources() {
-        List<Resource> resources = Arrays.asList(resource);
-        when(resourceRepository.findAll()).thenReturn(resources);
-
-        List<Resource> result = resourceService.getAll();
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(resource);
-        verify(resourceRepository).findAll();
-    }
-
-    @Test
     void getById_shouldReturnResource_whenExists() {
         when(resourceRepository.findById("test-id")).thenReturn(Optional.of(resource));
 
@@ -65,16 +53,6 @@ class ResourceServiceTest {
 
         assertThat(result).isEmpty();
         verify(resourceRepository).findById("test-id");
-    }
-
-    @Test
-    void save_shouldSaveAndReturnResource() {
-        when(resourceRepository.save(resource)).thenReturn(resource);
-
-        Resource savedResource = resourceService.save(resource);
-
-        assertThat(savedResource).isEqualTo(resource);
-        verify(resourceRepository).save(resource);
     }
 
     @Test

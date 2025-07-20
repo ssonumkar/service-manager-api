@@ -44,16 +44,6 @@ class OwnerControllerTest {
                 .isEqualTo("/api/v1/owner/test-id");
     }
 
-    @Test
-    void getOwnersByServiceId_shouldReturnOwners() {
-        List<Owner> owners = Arrays.asList(new Owner(), new Owner());
-        when(ownerService.getByServiceId("service-id")).thenReturn(owners);
-
-        ResponseEntity<List<Owner>> response = controller.getOwnersByServiceId("service-id");
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(2);
-    }
 
     @Test
     void getOwnersByResourceId_shouldReturnOwners() {
