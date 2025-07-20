@@ -2,38 +2,38 @@ package com.swisscom.api.service;
 
 import com.swisscom.api.dao.OwnerRepository;
 import com.swisscom.api.model.Owner;
+import com.swisscom.api.utils.ValidationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OwnerService {
+public class OwnerService implements IOwnerService{
     private final OwnerRepository repository;
     private final ResourceService resourceService;
     private final SwisscomServiceService swisscomService;
+    private final ValidationService validationService;
 
-    @Cacheable(value = "owners")
-    public List<Owner> getAll() {
-        log.info("Fetching all owners");
-        return repository.findAll();
-    }
-
-    @Cacheable(value = "ownersByService", key = "#serviceId")
-    public List<Owner> getByServiceId(String serviceId) {
-        log.info("Fetching owners by serviceId: {}", serviceId);
-        return repository.findByServiceId(serviceId);
-    }
-
-    @Cacheable(value = "ownersByResource", key = "#resourceId")
+    @Cacheable(value = "owners", key = "#resourceId", sync = true)
     public List<Owner> getByResourceId(String resourceId) {
         log.info("Fetching owners by resourceId: {}", resourceId);
         return repository.findByResourceId(resourceId);
+    }
+
+    @Override
+    @Cacheable(value = "ownersByResource", key = "#resourceId", sync = true)
+    public Page<Owner> getByResourceIdPaginated(String resourceId, Pageable pageable) {
+        log.info("Fetching paginated owners by resourceId: {}", resourceId);
+        return repository.findByResourceId(resourceId, pageable);
     }
 
     @CacheEvict(value = {"owners", "ownersByService", "ownersByResource"}, allEntries = true)
@@ -53,24 +53,18 @@ public class OwnerService {
         return false;
     }
 
+    @CacheEvict(value = {"owners", "ownersByService", "ownersByResource"}, allEntries = true)
     public void saveAll(List<Owner> ownersToSave, String serviceId) {
         log.info("Saving multiple owners");
         repository.saveAll(ownersToSave);
     }
     private void validateServiceAndResource(Owner owner) {
-        String resourceId = owner.getResourceId();
-        String serviceId = owner.getServiceId();
-        boolean serviceExists = swisscomService.getById(serviceId).isPresent();
-
-        if (!serviceExists) {
-            log.warn("Invalid service ID referenced in Owner: {}", serviceId);
-            throw new IllegalArgumentException("Invalid service ID: " + serviceId);
-        }
-        Boolean resourceExists = resourceService.getByResourceId(resourceId).isPresent();
-
-        if (!resourceExists) {
-            log.warn("Invalid resource ID referenced in Owner: {}", resourceId);
-            throw new IllegalArgumentException("Invalid resource ID: " + resourceId);
-        }
+        validationService.validateServiceAndResource(owner.getServiceId(), owner.getResourceId());
+    }
+    @Override
+    @Cacheable(value = "owners", key = "#id", sync = true)
+    public Optional<Owner> getById(String id) {
+        log.info("Fetching owner by id: {}", id);
+        return repository.findById(id);
     }
 }

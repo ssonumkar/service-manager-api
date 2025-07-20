@@ -1,15 +1,13 @@
 package com.swisscom.api.service;
 
 import com.swisscom.api.dao.SwisscomServiceRepository;
-import com.swisscom.api.model.ServiceSummaryDTO;
 import com.swisscom.api.model.SwisscomService;
-import com.swisscom.api.utils.SwisscomServiceCache;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SwisscomServiceService {
+public class SwisscomServiceService implements ISwisscomServiceService {
     private final SwisscomServiceRepository repository;
 
     @Cacheable(value = "services")
@@ -48,4 +46,10 @@ public class SwisscomServiceService {
         }
         return false;
     }
+    @Override
+    public Page<SwisscomService> getAllPaginated(Pageable pageable) {
+        log.info("Fetching paginated services");
+        return repository.findAll(pageable);
+    }
+
 }

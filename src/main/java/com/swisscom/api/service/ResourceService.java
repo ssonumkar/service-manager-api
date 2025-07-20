@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,22 +16,17 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ResourceService {
+public class ResourceService implements IResourceService{
     private final ResourceRepository repository;
     private final SwisscomServiceService swisscomService;
-    @Cacheable(value = "resources")
-    public List<Resource> getAll() {
-        log.info("Fetching all resources");
-        return repository.findAll();
-    }
 
-    @Cacheable(value = "resourcesByService", key = "#serviceId")
+    @Cacheable(value = "resourcesByService", key = "#serviceId", sync = true)
     public List<Resource> getByServiceId(String serviceId) {
         log.info("Fetching resources by serviceId: {}", serviceId);
         return repository.findByServiceId(serviceId);
     }
 
-    @CacheEvict(value = {"resources", "resourcesByService"}, allEntries = true)
+    @CacheEvict(value = {"resources"}, allEntries = true)
     public Resource save(Resource resource) {
         log.info("Saving resource: {}", resource);
         validateResourceId(resource.getServiceId());
@@ -46,10 +43,25 @@ public class ResourceService {
         return false;
     }
 
+    @CacheEvict(value = {"resources", "resourcesByService"}, allEntries = true)
     public void saveAll(List<Resource> resourcesToSave) {
         log.info("Saving multiple resources");
         repository.saveAll(resourcesToSave);
     }
+
+
+    @Override
+    public Page<Resource> getByServiceIdPaginated(String serviceId, Pageable pageable) {
+        log.info("Fetching paginated resources by serviceId: {}", serviceId);
+        return repository.findByServiceId(serviceId, pageable);
+    }
+
+    @Cacheable(value = "resources", key = "#resourceId", sync = true)
+    @Override
+    public Optional<Resource> getByResourceId(String resourceId) {
+        return this.repository.findById(resourceId);
+    }
+
     private void validateResourceId(String serviceId) {
         boolean exists = swisscomService.getById(serviceId).isPresent();
         if (!exists) {
@@ -58,7 +70,4 @@ public class ResourceService {
         }
     }
 
-    public Optional<Resource> getByResourceId(String resourceId) {
-        return repository.findById(resourceId);
-    }
 }
