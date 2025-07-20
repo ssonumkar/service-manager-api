@@ -78,3 +78,7 @@ cd service-manager-api
 chmod +x run-app.sh
 ./run-app.sh
 ````
+4. Optional run using Docker Compose
+````bash
+docker-compose up --build
+````
