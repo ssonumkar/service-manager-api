@@ -29,6 +29,10 @@ public class ResourceService implements IResourceService {
     @CacheEvict(value = {"resources"}, allEntries = true)
     public Resource save(Resource resource) {
         log.info("Saving resource: {}", resource);
+        if(repository.findById(resource.getId()).isEmpty()){
+            log.warn("Resource already present: {}", resource.getServiceId());
+            throw new IllegalArgumentException("Resource already present: " + resource.getServiceId());
+        }
         validateResourceId(resource.getServiceId());
         return repository.save(resource);
     }

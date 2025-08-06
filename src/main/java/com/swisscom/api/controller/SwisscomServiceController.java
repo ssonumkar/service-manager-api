@@ -31,6 +31,10 @@ public class SwisscomServiceController {
 
     @PostMapping
     public ResponseEntity<SwisscomService> create(@Valid @RequestBody SwisscomService s) {
+        if(service.getById(s.getId()).isPresent()){
+            log.warn("Service already present: {}", s.getId());
+            throw new IllegalArgumentException("Service already present: " + s.getId());
+        }
         return ResponseEntity.created(URI.create("/api/v1/service/" + s.getId()))
                 .body(service.save(s));
     }

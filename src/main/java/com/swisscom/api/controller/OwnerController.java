@@ -3,6 +3,7 @@ package com.swisscom.api.controller;
 import com.swisscom.api.model.Owner;
 import com.swisscom.api.service.IOwnerService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,12 +15,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/owner")
+@Slf4j
 @AllArgsConstructor
 public class OwnerController {
     private final IOwnerService ownerService;
 
     @PostMapping
     public ResponseEntity<Owner> createOwner(@RequestBody Owner owner) {
+        if(ownerService.getById(owner.getId()).isPresent()){
+            log.warn("Owner already present: {}", owner.getId());
+            throw new IllegalArgumentException("Owner already present: " + owner.getId());
+        }
         return ResponseEntity.created(URI.create("/api/v1/owner/" + owner.getId()))
                 .body(ownerService.save(owner));
     }
