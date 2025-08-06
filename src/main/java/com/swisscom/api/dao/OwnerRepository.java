@@ -17,4 +17,6 @@ public interface OwnerRepository extends MongoRepository<Owner, String> {
     // Additional methods can be added as required for the application logic
     List<Owner> findByServiceId(String serviceId);
     List<Owner> findByResourceId(String resourceId);
+
+    void deleteByResourceId(String serviceId);
 }

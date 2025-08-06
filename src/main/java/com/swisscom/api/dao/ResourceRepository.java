@@ -17,4 +17,6 @@ public interface ResourceRepository extends MongoRepository<Resource, String> {
     List<Resource> findByServiceId(String serviceId);
     Page<Resource> findByServiceId(String serviceId, Pageable pageable);
     Page<Resource> findAll(Pageable pageable);
+
+    void deleteByServiceId(String serviceId);
 }

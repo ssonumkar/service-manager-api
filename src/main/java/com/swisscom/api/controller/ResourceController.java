@@ -29,7 +29,7 @@ public class ResourceController {
     @GetMapping("/by-service/{serviceId}/paginated")
     public ResponseEntity<Page<Resource>> getByServiceIdPaginated(
             @PathVariable String serviceId,
-            @RequestParam(defaultValue = "0") int page,
+                @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(service.getByServiceIdPaginated(serviceId, PageRequest.of(page, size)));
     }
@@ -41,9 +41,7 @@ public class ResourceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        ownerService.getByResourceId(id).forEach(owner -> {
-            ownerService.delete(owner.getId());
-        });
+        ownerService.deleteByResourceId(id);
         return service.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

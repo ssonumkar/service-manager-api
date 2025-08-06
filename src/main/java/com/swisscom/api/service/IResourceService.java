@@ -35,4 +35,6 @@ public interface IResourceService {
     Page<Resource> getByServiceIdPaginated(String serviceId, Pageable pageable);
 
     Optional<Resource> getByResourceId(String resourceId);
+
+    void deleteByServiceId(String id);
 }

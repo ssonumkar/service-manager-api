@@ -55,7 +55,21 @@ public class SwisscomServiceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        return service.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        if (service.getById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Resource> resources = resourceService.getByServiceId(id);
+
+        for (Resource resource : resources) {
+            ownerService.deleteByResourceId(resource.getId());
+        }
+
+        resourceService.deleteByServiceId(id);
+
+        service.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/registerFull")

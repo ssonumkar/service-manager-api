@@ -69,4 +69,9 @@ public class OwnerService implements IOwnerService {
         log.info("Fetching owner by id: {}", id);
         return repository.findById(id);
     }
+
+    @Override
+    public void deleteByResourceId(String id) {
+        repository.deleteByResourceId(id);
+    }
 }

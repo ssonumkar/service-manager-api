@@ -40,4 +40,6 @@ public interface IOwnerService {
     boolean delete(String id);
 
     Optional<Owner> getById(String id);
+
+    void deleteByResourceId(String id);
 }

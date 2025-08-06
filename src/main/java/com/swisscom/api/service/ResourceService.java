@@ -62,6 +62,11 @@ public class ResourceService implements IResourceService {
         return this.repository.findById(resourceId);
     }
 
+    @Override
+    public void deleteByServiceId(String serviceId) {
+        repository.deleteByServiceId(serviceId);
+    }
+
     private void validateResourceId(String serviceId) {
         boolean exists = swisscomService.getById(serviceId).isPresent();
         if (!exists) {
